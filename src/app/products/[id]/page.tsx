@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Minus, Plus, Star } from "lucide-react"; 
+import { ChevronLeft, Minus, Plus, Star } from "lucide-react"; 
 import { useRouter, useParams } from "next/navigation";
 import { Product } from "@/utils/types";
 
@@ -28,14 +28,8 @@ export default function ProductDetail() {
     }
   }, [productId]);
 
-  const handleAddToCart = () => {
-    if (product) {
-      console.log("Product added to cart:", product.title, quantity);
-    }
-  };
-
   if (loading) {
-    return <div className="min-h-screen flex justify-center items-center text-white">Loading...</div>;
+    return <div className="min-h-screen bg-black flex justify-center items-center text-white">Loading...</div>;
   }
 
   if (!product) {
@@ -43,74 +37,61 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col justify-between px-6 py-8">
+    <div className="min-h-screen bg-black text-white p-5 flex flex-col">
       {/* Back Button */}
-      <div className="absolute top-4 left-4">
-        <button
-          className="text-2xl text-gray-300 hover:text-white"
-          onClick={() => router.back()}
-        >
-          ←
-        </button>
-      </div>
+      <button
+        onClick={() => router.back()}
+        className="text-white mb-4 flex items-center gap-1"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
 
       {/* Product Image */}
-      <div className="flex justify-center">
+      <div className="mb-6">
         <img
           src={product.thumbnail}
           alt={product.title}
-          className="w-72 h-72 object-cover rounded-full shadow-lg"
+          className="w-full aspect-square object-cover rounded-lg"
         />
       </div>
 
-      {/* Product Details */}
-      <div className="flex flex-col items-center text-center mt-6">
-        {/* Title & Rating */}
-        <div className="flex items-center">
-         <div className="flex flex-col">
-          <h1 className="text-2xl font-bold mb-2">{product.title}</h1>
-          <p className="text-gray-400 text-sm mb-4">{product.description}</p>
-         </div>
-          <div className="flex items-center text-yellow-400 ml-2">
-            <Star className="text-lg" />
-            <span className="ml-1">{product.rating}</span>
+      {/* Product Info */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl font-medium">{product.title}</h1>
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm">{product.rating}</span>
           </div>
         </div>
-       
+
+        <p className="text-gray-400 text-sm">{product.description}</p>
       </div>
 
-      {/* Price & Quantity Selector */}
-      <div className="flex items-center justify-between w-full px-4 mt-4">
-        {/* Quantity Selector */}
-        <div className="flex items-center bg-gray-800 px-4 py-2 rounded-full">
+      {/* Quantity and Price */}
+      <div className="flex items-center justify-between mt-6">
+        <div className="flex items-center gap-4">
           <button
-            className="text-yellow-400 text-lg"
-            onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+            onClick={() => quantity > 1 && setQuantity(q => q - 1)}
+            className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center"
           >
-            <Minus />
+            <Minus className="w-4 h-4" />
           </button>
-          <span className="mx-3 text-white text-lg">{quantity}</span>
+          <span>{quantity}</span>
           <button
-            className="text-yellow-400 text-lg"
-            onClick={() => setQuantity((prev) => prev + 1)}
+            onClick={() => setQuantity(q => q + 1)}
+            className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center"
           >
-            <Plus />
+            <Plus className="w-4 h-4" />
           </button>
         </div>
-
-        {/* Price */}
-        <p className="text-2xl font-semibold text-white">${product.price}</p>
+        <span className="text-lg font-medium">${product.price}</span>
       </div>
 
       {/* Add to Cart Button */}
-      <div className="w-full flex justify-center mt-8">
-        <button
-          onClick={handleAddToCart}
-          className="bg-yellow-400 text-black text-xl font-semibold px-8 py-4 rounded-full shadow-lg hover:bg-yellow-500 transition"
-        >
-          Add to cart
-        </button>
-      </div>
+      <button className="w-full py-4 bg-yellow-400 text-black rounded-xl font-medium mt-6">
+        Add to cart
+      </button>
     </div>
   );
 }

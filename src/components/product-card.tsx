@@ -12,8 +12,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     <>
     <div className="w-full aspect-square mb-3 rounded-lg overflow-hidden">
     <img
-      src={product.images[0]}
-      alt={product.title}
+      src={images[0]}
+      alt={title}
       className="w-full h-full object-cover"
     />
   </div>

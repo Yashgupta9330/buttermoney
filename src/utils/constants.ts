@@ -1,0 +1,1 @@
+export const categories = ["Donuts", "Ice Cream", "Bomboloni"];

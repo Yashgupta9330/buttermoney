@@ -1,20 +1,21 @@
-"use client";
+"use client"
 import { useEffect, useState } from "react";
-import ProductCard from "./product-card";
-import { Product } from "@/utils/types";
 import { useRouter } from "next/navigation";
+import { Product } from "@/utils/types";
+import ProductCard from "./product-card";
+import { categories } from "@/utils/constants";
 
 export default function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
-  const categories = ["Donuts", "Ice Cream", "Bomboloni"];
-  const [activeCategory, setActiveCategory] = useState("Donuts");
+  const [activeCategory, setActiveCategory] = useState<string>("Donuts");
   const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch("https://dummyjson.com/products");
         const data = await res.json();
-        setProducts(data.products); 
+        setProducts(data.products);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -23,36 +24,34 @@ export default function ProductList() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-3xl md:text-4xl font-semibold mb-6">Product List</h1>
-      <div className="flex gap-4 mb-6">
-        {categories.map((category) => (
+    <div className="min-h-screen bg-black p-5">
+      <h1 className="text-white text-2xl font-medium mb-4">Product List</h1>
+      <div className="flex gap-3 mb-6">
+        {categories.map((category:string) => (
           <button
             key={category}
             onClick={() => setActiveCategory(category)}
-            className={`px-4 py-2 rounded-full text-sm transition-colors ${
-              activeCategory === category ? "bg-yellow-400 text-black" : "text-gray-400 hover:text-white"
+            className={`px-4 py-2 rounded-full text-sm ${
+              activeCategory === category 
+                ? "bg-yellow-400 text-black" 
+                : "bg-zinc-900 text-gray-400"
             }`}
           >
             {category}
           </button>
         ))}
       </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        {products &&
-          products.map((product) => (
-            <div
-              className="cursor-pointer"
-              key={product.id}
-              onClick={() => router.push(`/products/${product.id}`)}  
-            >
-            <ProductCard key={product.id} product={product} />
-            </div>
-          ))}
+      <div className="grid grid-cols-2 gap-3">
+        {products.map((product) => (
+          <div
+            key={product.id}
+            onClick={() => router.push(`/products/${product.id}`)}
+            className="bg-zinc-900 rounded-xl p-4 cursor-pointer"
+          >
+            <ProductCard product={product} />
+          </div>
+        ))}
       </div>
     </div>
   );
 }
-
-
